@@ -9,7 +9,7 @@ msgstr ""
 
 #: photobooth/gui/Qt5Gui/Frames.py:50
 msgid "Start photobooth"
-msgstr "Démarrer photobooth"
+msgstr "Démarrer le photomaton"
 
 #: photobooth/gui/Qt5Gui/Frames.py:53
 msgid "Set date/time"
@@ -25,7 +25,7 @@ msgstr "Quitter"
 
 #: photobooth/gui/Qt5Gui/Frames.py:68
 msgid "photobooth"
-msgstr "photobooth"
+msgstr "photomaton"
 
 #: photobooth/gui/Qt5Gui/Frames.py:87
 msgid "Hit the"
@@ -85,7 +85,7 @@ msgstr "Interface"
 
 #: photobooth/gui/Qt5Gui/Frames.py:473
 msgid "Photobooth"
-msgstr "Photobooth"
+msgstr "Photomaton"
 
 #: photobooth/gui/Qt5Gui/Frames.py:474
 msgid "Camera"
@@ -241,7 +241,7 @@ msgstr "Taille du papier [mm] :"
 
 #: photobooth/gui/Qt5Gui/PyQt5Gui.py:164
 msgid "Starting the photobooth..."
-msgstr "Démarrage du photobooth ..."
+msgstr "Démarrage du photomaton ..."
 
 #: photobooth/gui/Qt5Gui/PyQt5Gui.py:214
 msgid "Processing picture..."
@@ -253,5 +253,5 @@ msgstr "Confirmation"
 
 #: photobooth/gui/Qt5Gui/PyQt5Gui.py:287
 msgid "Quit Photobooth?"
-msgstr "Quitter Photobooth ?"
+msgstr "Quitter le photomaton ?"
 
