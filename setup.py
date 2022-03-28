@@ -189,7 +189,9 @@ setup(
         'gpiozero',
         'gphoto2',
         'pycups',
-        'requests'
+        'requests',
+        'paramiko',
+        'scp'
         ],
 
     # List additional groups of dependencies here (e.g. development

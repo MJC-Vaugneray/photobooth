@@ -28,7 +28,7 @@ from .PictureList import PictureList
 from .PictureMailer import PictureMailer
 from .PictureSaver import PictureSaver
 from .PictureUploadWebdav import PictureUploadWebdav
-
+from .PictureSSH import PictureSSH
 
 class Worker:
 
@@ -48,6 +48,9 @@ class Worker:
         basename = strftime(path, localtime())
         self._shot_list = PictureList(basename)
 
+        # Keep track of last picture (and, eventually, individual shots)
+        self._captured_pictures = []
+
         self.initPostprocessTasks(config)
         self.initPictureTasks(config)
 
@@ -65,6 +68,10 @@ class Worker:
         # PictureUploadWebdav to upload pictures to a webdav storage
         if config.getBool('UploadWebdav', 'enable'):
             self._postprocess_tasks.append(PictureUploadWebdav(config))
+
+        # PictureSSH to upload pictures to an SSH server
+        if config.getBool('SSH', 'enable'):
+            self._postprocess_tasks.append(PictureSSH(config))
 
     def initPictureTasks(self, config):
 
@@ -85,10 +92,16 @@ class Worker:
         if isinstance(state, StateMachine.TeardownState):
             self.teardown(state)
         elif isinstance(state, StateMachine.ReviewState):
-            self.doPostprocessTasks(state.picture, self._pic_list.getNext())
+            filename = self._pic_list.getNext()
+            self._captured_pictures.append(filename)
+            self.doPostprocessTasks(state.picture, filename)
+            # Reset list of captured pictures
+            self._captured_pictures = []
         elif isinstance(state, StateMachine.CameraEvent):
             if state.name == 'capture':
-                self.doPictureTasks(state.picture, self._shot_list.getNext())
+                filename = self._shot_list.getNext()
+                self._captured_pictures.append(filename)
+                self.doPictureTasks(state.picture, filename)
             else:
                 raise ValueError('Unknown CameraEvent "{}"'.format(state))
 
@@ -99,7 +112,10 @@ class Worker:
     def doPostprocessTasks(self, picture, filename):
 
         for task in self._postprocess_tasks:
-            task.do(picture, filename)
+            if isinstance(task, PictureSSH):
+                task.do(self._captured_pictures)
+            else:
+                task.do(picture, filename)
 
     def doPictureTasks(self, picture, filename):
 

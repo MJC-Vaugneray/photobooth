@@ -478,6 +478,7 @@ class Settings(QtWidgets.QFrame):
         tabs.addTab(self.createPrinterSettings(), _('Printer'))
         tabs.addTab(self.createMailerSettings(), _('Mailer'))
         tabs.addTab(self.createUploadSettings(), _('Upload'))
+        tabs.addTab(self.createSSHSettings(), _('SSH'))
         return tabs
 
     def createButtons(self):
@@ -966,6 +967,39 @@ class Settings(QtWidgets.QFrame):
         widget.setLayout(layout)
         return widget
 
+    def createSSHSettings(self):
+
+        self.init('SSH')
+
+        enable = QtWidgets.QCheckBox()
+        enable.setChecked(self._cfg.getBool('SSH', 'enable'))
+        self.add('SSH', 'enable', enable)
+
+        ssh_server_host = QtWidgets.QLineEdit(self._cfg.get('SSH', 'ssh_server_host'))
+        self.add('SSH', 'ssh_server_host', ssh_server_host)
+        ssh_server_port = QtWidgets.QLineEdit(self._cfg.get('SSH', 'ssh_server_port'))
+        self.add('SSH', 'ssh_server_port', ssh_server_port)
+        ssh_server_folder = QtWidgets.QLineEdit(self._cfg.get('SSH', 'ssh_server_folder'))
+        self.add('SSH', 'ssh_server_folder', ssh_server_folder)
+
+        ssh_server_user = QtWidgets.QLineEdit(self._cfg.get('SSH', 'ssh_server_user'))
+        self.add('SSH', 'ssh_server_user', ssh_server_user)
+        ssh_server_password = QtWidgets.QLineEdit(self._cfg.get('SSH', 'ssh_server_password'))
+        self.add('SSH', 'ssh_server_password', ssh_server_password)
+
+        layout = QtWidgets.QFormLayout()
+        layout.addRow(_('Enable SSH:'), enable)
+        layout.addRow(_('SSH server hostname:'), ssh_server_host)
+        layout.addRow(_('SSH server port:'), ssh_server_port)
+        layout.addRow(_('Folder on the remote server:'), ssh_server_folder)
+        layout.addRow(_('SSH user:'), ssh_server_user)
+        layout.addRow(_('SSH password (empty for key authentication):'), ssh_server_password)
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        return widget
+
+
     def storeConfigAndRestart(self):
 
         self._cfg.set('Gui', 'fullscreen',
@@ -1078,6 +1112,17 @@ class Settings(QtWidgets.QFrame):
                       self.get('UploadWebdav', 'user').text())
         self._cfg.set('UploadWebdav', 'password',
                       self.get('UploadWebdav', 'password').text())
+
+        self._cfg.set('SSH', 'enable',
+                      str(self.get('SSH', 'enable').isChecked()))
+        self._cfg.set('SSH', 'ssh_server_host', self.get('SSH', 'ssh_server_host').text())
+        self._cfg.set('SSH', 'ssh_server_port',
+                      self.get('SSH', 'ssh_server_port').text())
+        self._cfg.set('SSH', 'ssh_server_folder',
+                      self.get('SSH', 'ssh_server_folder').text())
+        self._cfg.set('SSH', 'ssh_server_user',
+                      self.get('SSH', 'ssh_server_user').text())
+        self._cfg.set('SSH', 'ssh_server_password', self.get('SSH', 'ssh_server_password').text())
 
         self._cfg.write()
         self._restartAction()
