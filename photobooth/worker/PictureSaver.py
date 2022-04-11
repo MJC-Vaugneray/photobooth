@@ -25,17 +25,16 @@ from .WorkerTask import WorkerTask
 
 class PictureSaver(WorkerTask):
 
-    def __init__(self, basename):
+    def __init__(self, basedir):
 
         super().__init__()
 
         # Ensure directory exists
-        dirname = os.path.dirname(basename)
-        if not os.path.exists(dirname):
-            os.makedirs(dirname)
+        if not os.path.exists(basedir):
+            os.makedirs(basedir)
 
-    def do(self, picture, filename):
+    def do(self, picture, filepath):
 
-        logging.info('Saving picture as %s', filename)
-        with open(filename, 'wb') as f:
+        logging.info('Saving picture as %s', filepath)
+        with open(filepath, 'wb') as f:
             f.write(picture.getbuffer())

@@ -739,9 +739,9 @@ class Settings(QtWidgets.QFrame):
         self.init('Storage')
 
         basedir = QtWidgets.QLineEdit(self._cfg.get('Storage', 'basedir'))
-        basename = QtWidgets.QLineEdit(self._cfg.get('Storage', 'basename'))
+        prefix = QtWidgets.QLineEdit(self._cfg.get('Storage', 'prefix'))
         self.add('Storage', 'basedir', basedir)
-        self.add('Storage', 'basename', basename)
+        self.add('Storage', 'prefix', prefix)
 
         keep_pictures = QtWidgets.QCheckBox()
         keep_pictures.setChecked(self._cfg.getBool('Storage', 'keep_pictures'))
@@ -762,7 +762,7 @@ class Settings(QtWidgets.QFrame):
 
         layout = QtWidgets.QFormLayout()
         layout.addRow(_('Output directory (strftime possible):'), lay_dir)
-        layout.addRow(_('Basename of files (strftime possible):'), basename)
+        layout.addRow(_('Prefix for file names:'), prefix)
         layout.addRow(_('Keep single shots:'), keep_pictures)
 
         widget = QtWidgets.QWidget()
@@ -1052,8 +1052,8 @@ class Settings(QtWidgets.QFrame):
 
         self._cfg.set('Storage', 'basedir',
                       self.get('Storage', 'basedir').text())
-        self._cfg.set('Storage', 'basename',
-                      self.get('Storage', 'basename').text())
+        self._cfg.set('Storage', 'prefix',
+                      self.get('Storage', 'prefix').text())
         self._cfg.set('Storage', 'keep_pictures',
                       str(self.get('Storage', 'keep_pictures').isChecked()))
 

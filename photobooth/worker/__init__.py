@@ -17,14 +17,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import os.path
-
-from time import localtime, strftime
-
 from .. import StateMachine
 from ..Threading import Workers
 
-from .PictureList import PictureList
+from .PictureTracker import PictureTracker
 from .PictureMailer import PictureMailer
 from .PictureSaver import PictureSaver
 from .PictureUploadWebdav import PictureUploadWebdav
@@ -36,20 +32,8 @@ class Worker:
 
         self._comm = comm
 
-        # Picture list for assembled pictures
-        path = os.path.join(config.get('Storage', 'basedir'),
-                            config.get('Storage', 'basename'))
-        basename = strftime(path, localtime())
-        self._pic_list = PictureList(basename)
-
-        # Picture list for individual shots
-        path = os.path.join(config.get('Storage', 'basedir'),
-                            config.get('Storage', 'basename') + '_shot_')
-        basename = strftime(path, localtime())
-        self._shot_list = PictureList(basename)
-
-        # Keep track of last picture (and, eventually, individual shots)
-        self._captured_pictures = []
+        # Track the picture
+        self._pic_tracker = PictureTracker(config.get('Storage', 'basedir'), config.get('Storage', 'prefix'))
 
         self.initPostprocessTasks(config)
         self.initPictureTasks(config)
@@ -59,7 +43,7 @@ class Worker:
         self._postprocess_tasks = []
 
         # PictureSaver for assembled pictures
-        self._postprocess_tasks.append(PictureSaver(self._pic_list.basename))
+        self._postprocess_tasks.append(PictureSaver(self._pic_tracker.basedir))
 
         # PictureMailer for assembled pictures
         if config.getBool('Mailer', 'enable'):
@@ -78,7 +62,7 @@ class Worker:
         self._picture_tasks = []
 
         # PictureSaver for single shots
-        self._picture_tasks.append(PictureSaver(self._shot_list.basename))
+        self._picture_tasks.append(PictureSaver(self._pic_tracker.basedir))
 
     def run(self):
 
@@ -91,17 +75,15 @@ class Worker:
 
         if isinstance(state, StateMachine.TeardownState):
             self.teardown(state)
+        elif isinstance(state, StateMachine.GreeterState):
+            self._pic_tracker.initializeNextPicture()
         elif isinstance(state, StateMachine.ReviewState):
-            filename = self._pic_list.getNext()
-            self._captured_pictures.append(filename)
-            self.doPostprocessTasks(state.picture, filename)
-            # Reset list of captured pictures
-            self._captured_pictures = []
+            filepath = self._pic_tracker.getPicturePath()
+            self.doPostprocessTasks(state.picture, filepath)
         elif isinstance(state, StateMachine.CameraEvent):
             if state.name == 'capture':
-                filename = self._shot_list.getNext()
-                self._captured_pictures.append(filename)
-                self.doPictureTasks(state.picture, filename)
+                filepath = self._pic_tracker.getNextShot()
+                self.doPictureTasks(state.picture, filepath)
             else:
                 raise ValueError('Unknown CameraEvent "{}"'.format(state))
 
@@ -109,15 +91,15 @@ class Worker:
 
         pass
 
-    def doPostprocessTasks(self, picture, filename):
+    def doPostprocessTasks(self, picture, filepath):
 
         for task in self._postprocess_tasks:
             if isinstance(task, PictureSSH):
-                task.do(self._captured_pictures)
+                task.do(self._pic_tracker.shots)
             else:
-                task.do(picture, filename)
+                task.do(picture, filepath)
 
-    def doPictureTasks(self, picture, filename):
+    def doPictureTasks(self, picture, filepath):
 
         for task in self._picture_tasks:
-            task.do(picture, filename)
+            task.do(picture, filepath)
