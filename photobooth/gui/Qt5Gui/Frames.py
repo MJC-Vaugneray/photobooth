@@ -67,7 +67,7 @@ class Welcome(QtWidgets.QFrame):
 
         title = QtWidgets.QLabel(_('photobooth'))
 
-        url = 'https://github.com/reuterbal/photobooth'
+        url = 'https://github.com/pichouk/photobooth'
         link = QtWidgets.QLabel('<a href="{0}">{0}</a>'.format(url))
 
         lay = QtWidgets.QVBoxLayout()

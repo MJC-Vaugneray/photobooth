@@ -119,11 +119,11 @@ setup(
     #
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
-    url='https://github.com/reuterbal/photobooth',  # Optional
+    url='https://github.com/pichouk/photobooth',  # Optional
 
     # This should be your name or the name of the organization which owns the
     # project.
-    author='reuterbal',  # Optional
+    author='pichouk',  # Optional
 
     # This should be a valid email address corresponding to the author listed
     # above.
@@ -254,8 +254,8 @@ setup(
     # maintainers, and where to support the project financially. The key is
     # what's used to render the link text on PyPI.
     project_urls={  # Optional
-        'Bug Reports': 'https://github.com/reuterbal/photobooth/issues',
-        'Source': 'https://github.com/reuterbal/photobooth/',
+        'Bug Reports': 'https://github.com/pichouk/photobooth/issues',
+        'Source': 'https://github.com/pichouk/photobooth/',
     },
 
     cmdclass={
