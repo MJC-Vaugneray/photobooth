@@ -33,11 +33,8 @@ def send_file(s3_conn, bucket_name, src_path, dst_path):
         # Create object on S3 and write data
         obj = s3_conn.Object(bucket_name, dst_path)
         s3_conn.meta.client.upload_file(src_path, bucket_name, dst_path)
-    # Handling errors
-    except ClientError as e:
-        logging.error("Error while writing file : ", e)
-        # TODO manage exception
-
+    except Exception as err:
+        logging.error("Unable to send picture " + str(src_path) + " to S3 : ", err)
 
 class PictureS3(WorkerTask):
 

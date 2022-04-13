@@ -40,11 +40,13 @@ def send_file(server_host, server_port, dest_folder, ssh_user, ssh_password, pic
     """
     with SSHClient() as ssh:
         ssh.load_system_host_keys()
-        ssh.connect(server_host, server_port, ssh_user, ssh_password)
+        try:
+            ssh.connect(server_host, server_port, ssh_user, ssh_password)
 
-        with SCPClient(ssh.get_transport()) as scp:
-            scp.put(picture_path, remote_path=PurePosixPath(dest_folder,Path(picture_path).name))
-
+            with SCPClient(ssh.get_transport()) as scp:
+                scp.put(picture_path, remote_path=PurePosixPath(dest_folder,Path(picture_path).name))
+        except Exception as err:
+            logging.error("Unable to send picture " + str(picture_path) + " using SSH : ", err)
 
 class PictureSSH(WorkerTask):
 
