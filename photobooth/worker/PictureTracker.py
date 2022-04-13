@@ -61,7 +61,6 @@ class PictureTracker:
     @property
     def basedir(self):
         """Return the base directory for the files"""
-        print(self._basedir)
         return self._basedir
 
     @property

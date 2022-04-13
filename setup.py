@@ -191,7 +191,8 @@ setup(
         'pycups',
         'requests',
         'paramiko',
-        'scp'
+        'scp',
+        'boto3'
         ],
 
     # List additional groups of dependencies here (e.g. development

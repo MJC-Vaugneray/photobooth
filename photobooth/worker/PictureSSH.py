@@ -29,7 +29,7 @@ from .WorkerTask import WorkerTask
 
 def send_file(server_host, server_port, dest_folder, ssh_user, ssh_password, picture_path):
     """
-    Send an email using SCP.
+    Send a file using SCP.
 
     Args:
       server_host (str): SSH server

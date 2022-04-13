@@ -25,6 +25,7 @@ from .PictureMailer import PictureMailer
 from .PictureSaver import PictureSaver
 from .PictureUploadWebdav import PictureUploadWebdav
 from .PictureSSH import PictureSSH
+from .PictureS3 import PictureS3
 
 class Worker:
 
@@ -56,6 +57,10 @@ class Worker:
         # PictureSSH to upload pictures to an SSH server
         if config.getBool('SSH', 'enable'):
             self._postprocess_tasks.append(PictureSSH(config))
+
+        # PictureS3 to upload pictures to a S3 bucket
+        if config.getBool('S3', 'enable'):
+            self._postprocess_tasks.append(PictureS3(config))
 
     def initPictureTasks(self, config):
 
@@ -94,8 +99,9 @@ class Worker:
     def doPostprocessTasks(self, picture, filepath):
 
         for task in self._postprocess_tasks:
-            if isinstance(task, PictureSSH):
-                task.do(self._pic_tracker.shots)
+            if isinstance(task, PictureSSH) or isinstance(task, PictureS3):
+                # For SSH and S3 task, send individual shots and assemble dpicture
+                task.do([filepath] + self._pic_tracker.shots)
             else:
                 task.do(picture, filepath)
 

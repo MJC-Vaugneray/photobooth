@@ -479,6 +479,7 @@ class Settings(QtWidgets.QFrame):
         tabs.addTab(self.createMailerSettings(), _('Mailer'))
         tabs.addTab(self.createUploadSettings(), _('Upload'))
         tabs.addTab(self.createSSHSettings(), _('SSH'))
+        tabs.addTab(self.createS3Settings(), _('S3'))
         return tabs
 
     def createButtons(self):
@@ -999,6 +1000,33 @@ class Settings(QtWidgets.QFrame):
         widget.setLayout(layout)
         return widget
 
+    def createS3Settings(self):
+
+        self.init('S3')
+
+        enable = QtWidgets.QCheckBox()
+        enable.setChecked(self._cfg.getBool('S3', 'enable'))
+        self.add('S3', 'enable', enable)
+
+        aws_profile = QtWidgets.QLineEdit(self._cfg.get('S3', 'aws_profile'))
+        self.add('S3', 'aws_profile', aws_profile)
+        bucket_name = QtWidgets.QLineEdit(self._cfg.get('S3', 'bucket_name'))
+        self.add('S3', 'bucket_name', bucket_name)
+        prefix = QtWidgets.QLineEdit(self._cfg.get('S3', 'prefix'))
+        self.add('S3', 'prefix', prefix)
+        endpoint = QtWidgets.QLineEdit(self._cfg.get('S3', 'endpoint_url'))
+        self.add('S3', 'endpoint_url', endpoint)
+
+        layout = QtWidgets.QFormLayout()
+        layout.addRow(_('Enable S3:'), enable)
+        layout.addRow(_('AWS profile for S3 (must be configured on the computer):'), aws_profile)
+        layout.addRow(_('Name of the S3 bucket:'), bucket_name)
+        layout.addRow(_('Prefix for files inside bucket:'), prefix)
+        layout.addRow(_('Custom endpoint URL if not using AWS S3:'), endpoint)
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        return widget
 
     def storeConfigAndRestart(self):
 
@@ -1123,6 +1151,12 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('SSH', 'ssh_server_user',
                       self.get('SSH', 'ssh_server_user').text())
         self._cfg.set('SSH', 'ssh_server_password', self.get('SSH', 'ssh_server_password').text())
+
+        self._cfg.set('S3', 'enable', str(self.get('S3', 'enable').isChecked()))
+        self._cfg.set('S3', 'aws_profile', self.get('S3', 'aws_profile').text())
+        self._cfg.set('S3', 'bucket_name', self.get('S3', 'bucket_name').text())
+        self._cfg.set('S3', 'prefix', self.get('S3', 'prefix').text())
+        self._cfg.set('S3', 'endpoint_url', self.get('S3', 'endpoint_url').text())
 
         self._cfg.write()
         self._restartAction()
