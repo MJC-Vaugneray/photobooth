@@ -37,6 +37,7 @@ from .util import lookup_and_import
 from .StateMachine import Context, ErrorEvent
 from .Threading import Communicator, Workers
 from .worker import Worker
+from .lamp import LampWorker
 
 # Globally install gettext for I18N
 gettext.install('photobooth', 'photobooth/locale')
@@ -144,6 +145,30 @@ class GpioProcess(mp.Process):
 
         logging.debug('GpioProcess: Exit')
 
+class LampProcess(mp.Process):
+
+    def __init__(self, argv, config, comm):
+
+        super().__init__()
+        self.daemon = True
+
+        self._cfg = config
+        self._comm = comm
+
+    def run(self):
+
+        logging.debug('LampProcess: Initializing...')
+
+        while True:
+            try:
+                logging.debug('LampProcess: Running...')
+                if LampWorker(self._cfg, self._comm).run():
+                    break
+            except Exception as e:
+                logging.exception('LampProcess: Exception "{}"'.format(e))
+                self._comm.send(Workers.MASTER, ErrorEvent('LampWorker', str(e)))
+
+        logging.debug('LampProcess: Exit')
 
 def parseArgs(argv):
 
@@ -179,13 +204,16 @@ def run(argv, is_run):
     comm = Communicator()
     context = Context(comm, is_run)
 
-    # Initialize processes: We use five processes here:
+    # Initialize processes: We use five/six processes here:
     # 1. Master that collects events and distributes state changes
     # 2. Camera handling
     # 3. GUI
     # 4. Postprocessing worker
     # 5. GPIO handler
+    # 6. LampProcess (if enabled)
     proc_classes = (CameraProcess, WorkerProcess, GuiProcess, GpioProcess)
+    if config.getBool('Relay', 'enable'):
+        proc_classes += (LampProcess,)
     procs = [P(argv, config, comm) for P in proc_classes]
 
     for proc in procs:

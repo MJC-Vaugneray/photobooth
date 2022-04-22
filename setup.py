@@ -192,7 +192,8 @@ setup(
         'requests',
         'paramiko',
         'scp',
-        'boto3'
+        'boto3',
+        'hidapi'
         ],
 
     # List additional groups of dependencies here (e.g. development

@@ -480,6 +480,7 @@ class Settings(QtWidgets.QFrame):
         tabs.addTab(self.createUploadSettings(), _('Upload'))
         tabs.addTab(self.createSSHSettings(), _('SSH'))
         tabs.addTab(self.createS3Settings(), _('S3'))
+        tabs.addTab(self.createRelaySettings(), _('Relay'))
         return tabs
 
     def createButtons(self):
@@ -1028,6 +1029,31 @@ class Settings(QtWidgets.QFrame):
         widget.setLayout(layout)
         return widget
 
+    def createRelaySettings(self):
+
+        self.init('Relay')
+
+        enable = QtWidgets.QCheckBox()
+        enable.setChecked(self._cfg.getBool('Relay', 'enable'))
+        self.add('Relay', 'enable', enable)
+
+        vendor_id = QtWidgets.QLineEdit(self._cfg.get('Relay', 'vendor_id'))
+        self.add('Relay', 'vendor_id', vendor_id)
+        product_id = QtWidgets.QLineEdit(self._cfg.get('Relay', 'product_id'))
+        self.add('Relay', 'product_id', product_id)
+        lamp_relay_id = QtWidgets.QLineEdit(self._cfg.get('Relay', 'lamp_relay_id'))
+        self.add('Relay', 'lamp_relay_id', lamp_relay_id)
+
+        layout = QtWidgets.QFormLayout()
+        layout.addRow(_('Enable HID relay for lamp:'), enable)
+        layout.addRow(_('Vendor ID for HID device:'), vendor_id)
+        layout.addRow(_('Product ID for HID device:'), product_id)
+        layout.addRow(_('Relay ID on the device controlling the lamp:'), lamp_relay_id)
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        return widget
+
     def storeConfigAndRestart(self):
 
         self._cfg.set('Gui', 'fullscreen',
@@ -1157,6 +1183,11 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('S3', 'bucket_name', self.get('S3', 'bucket_name').text())
         self._cfg.set('S3', 'prefix', self.get('S3', 'prefix').text())
         self._cfg.set('S3', 'endpoint_url', self.get('S3', 'endpoint_url').text())
+
+        self._cfg.set('Relay', 'enable', str(self.get('Relay', 'enable').isChecked()))
+        self._cfg.set('Relay', 'vendor_id', self.get('Relay', 'vendor_id').text())
+        self._cfg.set('Relay', 'product_id', self.get('Relay', 'product_id').text())
+        self._cfg.set('Relay', 'lamp_relay_id', self.get('Relay', 'lamp_relay_id').text())
 
         self._cfg.write()
         self._restartAction()
