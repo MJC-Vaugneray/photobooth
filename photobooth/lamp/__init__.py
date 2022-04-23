@@ -28,8 +28,10 @@ https://github.com/trezor/cython-hidapi/blob/6057d41b5a2552a70ff7117a9d19fc21bf8
 
 from time import sleep
 
+import logging
 from .. import StateMachine
 from ..Threading import Workers
+from ..StateMachine import ErrorEvent
 
 class Relay(object):
     """Relay class"""
@@ -142,7 +144,12 @@ class LampWorker:
         super().__init__()
 
         self._comm = comm
-        self._relay = Relay(idVendor=int(config.get('Relay', 'vendor_id'), 16), idProduct=int(config.get('Relay', 'product_id'), 16))
+        try:
+            self._relay = Relay(idVendor=int(config.get('Relay', 'vendor_id'), 16), idProduct=int(config.get('Relay', 'product_id'), 16))
+        except Exception as err:
+            logging.exception('Lamp relay: Exception "{}"'.format(err))
+            self._comm.send(Workers.MASTER, ErrorEvent('LampWorker', 'unable to start the lamp relay'))
+
         self._lampId = config.getInt('Relay', 'lamp_relay_id')
 
 
