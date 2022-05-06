@@ -97,25 +97,25 @@ class Relay(object):
         Set the state for a relay.
         
         If a relay is specified, then the relay status will be set.
-        Either (or is 0 is specified), it will the state of all relays.
+        Either (or is 0 is specified), it will the state of both relays.
 
         on=True will turn the relay(s) on, on=False will turn them off.
         """
         if relay == 0:
             if on:
-                message = [0xFE]
+                self.send_feature_report([0xFF, 1])
+                self.send_feature_report([0xFF, 2])
             else:
-                message = [0xFC]
+                self.send_feature_report([0xFD, 1])
+                self.send_feature_report([0xFD, 2])
         else:
             # An integer can be passed instead of the a byte, but it's better to
             # use ints when possible since the docs use them, but it's not neccessary.
             # https://github.com/jaketeater/simpleusbrelay/blob/master/simpleusbrelay/__init__.py
             if on:
-                message = [0xFF, relay]
+                self.send_feature_report([0xFF, relay])
             else:
-                message = [0xFD, relay]
-
-        self.send_feature_report(message)
+                self.send_feature_report([0xFD, relay])
 
     def get_state(self, relay = 0):
         """
@@ -151,7 +151,6 @@ class LampWorker:
             self._comm.send(Workers.MASTER, ErrorEvent('LampWorker', 'unable to start the lamp relay'))
 
         self._lampId = config.getInt('Relay', 'lamp_relay_id')
-
 
     def run(self):
 

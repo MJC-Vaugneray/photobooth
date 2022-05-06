@@ -26,6 +26,7 @@ from .PictureSaver import PictureSaver
 from .PictureUploadWebdav import PictureUploadWebdav
 from .PictureSSH import PictureSSH
 from .PictureS3 import PictureS3
+from .QRCode import QRCode
 
 class Worker:
 
@@ -45,6 +46,10 @@ class Worker:
 
         # PictureSaver for assembled pictures
         self._postprocess_tasks.append(PictureSaver(self._pic_tracker.basedir))
+
+        # QRCode to print a qrcode link
+        if config.getBool('QRCode', 'enable'):
+            self._postprocess_tasks.append(QRCode(config))
 
         # PictureMailer for assembled pictures
         if config.getBool('Mailer', 'enable'):
@@ -83,8 +88,7 @@ class Worker:
         elif isinstance(state, StateMachine.GreeterState):
             self._pic_tracker.initializeNextPicture()
         elif isinstance(state, StateMachine.ReviewState):
-            filepath = self._pic_tracker.getPicturePath()
-            self.doPostprocessTasks(state.picture, filepath)
+            self.doPostprocessTasks(state.picture)
         elif isinstance(state, StateMachine.CameraEvent):
             if state.name == 'capture':
                 filepath = self._pic_tracker.getNextShot()
@@ -96,14 +100,16 @@ class Worker:
 
         pass
 
-    def doPostprocessTasks(self, picture, filepath):
+    def doPostprocessTasks(self, picture):
 
         for task in self._postprocess_tasks:
             if isinstance(task, PictureSSH) or isinstance(task, PictureS3):
                 # For SSH and S3 task, send individual shots and assemble dpicture
-                task.do([filepath] + self._pic_tracker.shots)
+                task.do([self._pic_tracker.getPicturePath()] + self._pic_tracker.shots)
+            elif isinstance(task, QRCode):
+                task.do(picture, self._pic_tracker)
             else:
-                task.do(picture, filepath)
+                task.do(picture, self._pic_tracker.getPicturePath())
 
     def doPictureTasks(self, picture, filepath):
 

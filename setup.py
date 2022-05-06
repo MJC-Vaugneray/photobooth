@@ -193,7 +193,9 @@ setup(
         'paramiko',
         'scp',
         'boto3',
-        'hidapi'
+        'hidapi',
+        'qrcode',
+        'python-barcode'
         ],
 
     # List additional groups of dependencies here (e.g. development

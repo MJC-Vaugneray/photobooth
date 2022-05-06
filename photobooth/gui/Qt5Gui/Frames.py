@@ -481,6 +481,7 @@ class Settings(QtWidgets.QFrame):
         tabs.addTab(self.createSSHSettings(), _('SSH'))
         tabs.addTab(self.createS3Settings(), _('S3'))
         tabs.addTab(self.createRelaySettings(), _('Relay'))
+        tabs.addTab(self.createQRCodeSettings(), _('QRCode'))
         return tabs
 
     def createButtons(self):
@@ -1054,6 +1055,45 @@ class Settings(QtWidgets.QFrame):
         widget.setLayout(layout)
         return widget
 
+    def createQRCodeSettings(self):
+
+        self.init('QRCode')
+
+        enable = QtWidgets.QCheckBox()
+        enable.setChecked(self._cfg.getBool('QRCode', 'enable'))
+        self.add('QRCode', 'enable', enable)
+
+        url_prefix = QtWidgets.QLineEdit(self._cfg.get('QRCode', 'url_prefix'))
+        self.add('QRCode', 'url_prefix', url_prefix)
+
+        printer_name = QtWidgets.QLineEdit(self._cfg.get('QRCode', 'printer_name'))
+        self.add('QRCode', 'printer_name', printer_name)
+
+        qrcode_header = QtWidgets.QLineEdit(self._cfg.get('QRCode', 'qrcode_header'))
+        self.add('QRCode', 'qrcode_header', qrcode_header)
+
+        qrcode_header_width = QtWidgets.QLineEdit(self._cfg.get('QRCode', 'qrcode_header_width'))
+        self.add('QRCode', 'qrcode_header_width', qrcode_header_width)
+
+        qrcode_header_height = QtWidgets.QLineEdit(self._cfg.get('QRCode', 'qrcode_header_height'))
+        self.add('QRCode', 'qrcode_header_height', qrcode_header_height)
+
+        barcode_enable = QtWidgets.QLineEdit(self._cfg.get('QRCode', 'barcode_enable'))
+        self.add('QRCode', 'barcode_enable', barcode_enable)
+
+        layout = QtWidgets.QFormLayout()
+        layout.addRow(_('Enable QRCode printing of picture URL:'), enable)
+        layout.addRow(_('Prefix URL for uploaded pictures:'), url_prefix)
+        layout.addRow(_('Printer name to use:'), printer_name)
+        layout.addRow(_('Path of the header file to use:'), qrcode_header)
+        layout.addRow(_('Width of the QRCode header image:'), qrcode_header_width)
+        layout.addRow(_('Height of the QRCode header image :'), qrcode_header_height)
+        layout.addRow(_('Enable printing of a barcode with the QRCode :'), barcode_enable)
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(layout)
+        return widget
+
     def storeConfigAndRestart(self):
 
         self._cfg.set('Gui', 'fullscreen',
@@ -1188,6 +1228,14 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('Relay', 'vendor_id', self.get('Relay', 'vendor_id').text())
         self._cfg.set('Relay', 'product_id', self.get('Relay', 'product_id').text())
         self._cfg.set('Relay', 'lamp_relay_id', self.get('Relay', 'lamp_relay_id').text())
+
+        self._cfg.set('QRCode', 'enable', str(self.get('QRCode', 'enable').isChecked()))
+        self._cfg.set('QRCode', 'url_prefix', self.get('QRCode', 'url_prefix').text())
+        self._cfg.set('QRCode', 'printer_name', self.get('QRCode', 'printer_name').text())
+        self._cfg.set('QRCode', 'qrcode_header', self.get('QRCode', 'qrcode_header').text())
+        self._cfg.set('QRCode', 'qrcode_header_width', self.get('QRCode', 'qrcode_header_width').text())
+        self._cfg.set('QRCode', 'qrcode_header_height', self.get('QRCode', 'qrcode_header_height').text())
+        self._cfg.set('QRCode', 'barcode_enable', self.get('QRCode', 'barcode_enable').text())
 
         self._cfg.write()
         self._restartAction()

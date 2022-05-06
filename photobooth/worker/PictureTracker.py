@@ -73,6 +73,16 @@ class PictureTracker:
         """Return the list of current shots"""
         return self._shots
 
+    @property
+    def picture_time(self):
+        """Return the time of the picture"""
+        return self._picture_time
+
+    @property
+    def filename(self):
+        """Return the filename of the assembled picture"""
+        return self._picture_time + self.extension
+
     def getPicturePath(self):
         """
         Generate a filename for the picture path, and update local variable
