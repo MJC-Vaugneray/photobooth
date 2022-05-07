@@ -242,7 +242,7 @@ class PyQt5Gui(GuiSkeleton):
         if self._is_escape and event.key() == QtCore.Qt.Key_Escape:
             self._comm.send(Workers.MASTER,
                             TeardownEvent(TeardownEvent.WELCOME))
-        elif self._is_trigger and event.key() == QtCore.Qt.Key_Space:
+        elif self._is_trigger and (event.key() == QtCore.Qt.Key_Space or event.key() == QtCore.Qt.Key_Enter):
             self._comm.send(Workers.MASTER, GuiEvent('trigger'))
 
     def _showSetDateTime(self):
