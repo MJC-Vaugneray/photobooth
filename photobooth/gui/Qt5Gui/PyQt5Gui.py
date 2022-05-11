@@ -151,9 +151,14 @@ class PyQt5Gui(GuiSkeleton):
 
         self._disableTrigger()
         self._disableEscape()
-        self._setWidget(Frames.Welcome(
-            lambda: self._comm.send(Workers.MASTER, GuiEvent('start')),
-            self._showSetDateTime, self._showSettings, self.close))
+        self._setWidget(
+            Frames.Welcome(
+                (self._cfg.getInt('Gui', 'width'), self._cfg.getInt('Gui', 'height')),
+                lambda: self._comm.send(Workers.MASTER, GuiEvent('start')),
+                self._showSetDateTime,
+                self._showSettings,
+                self.close
+            ))
         if QtWidgets.QApplication.overrideCursor() != 0:
             QtWidgets.QApplication.restoreOverrideCursor()
 
@@ -161,7 +166,10 @@ class PyQt5Gui(GuiSkeleton):
 
         self._disableTrigger()
         self._enableEscape()
-        self._setWidget(Frames.WaitMessage(_('Starting the photobooth...')))
+        self._setWidget(Frames.WaitMessage(
+            (self._cfg.getInt('Gui', 'width'), self._cfg.getInt('Gui', 'height')),
+            _('Starting the photobooth...')
+        ))
         if self._cfg.getBool('Gui', 'hide_cursor'):
             QtWidgets.QApplication.setOverrideCursor(QtCore.Qt.BlankCursor)
 
@@ -169,8 +177,12 @@ class PyQt5Gui(GuiSkeleton):
 
         self._enableEscape()
         self._enableTrigger()
-        self._setWidget(Frames.IdleMessage(
-            lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger'))))
+        self._setWidget(
+            Frames.IdleMessage(
+                (self._cfg.getInt('Gui', 'width'), self._cfg.getInt('Gui', 'height')),
+                lambda: self._comm.send(Workers.MASTER, GuiEvent('trigger'))
+            )
+        )
 
     def showGreeter(self, state):
 
@@ -184,6 +196,7 @@ class PyQt5Gui(GuiSkeleton):
         greeter_time = self._cfg.getInt('Photobooth', 'greeter_time') * 1000
 
         self._setWidget(Frames.GreeterMessage(
+            (self._cfg.getInt('Gui', 'width'), self._cfg.getInt('Gui', 'height')),
             *num_pic, skip,
             lambda: self._comm.send(Workers.MASTER, GuiEvent('countdown'))))
         QtCore.QTimer.singleShot(
@@ -214,7 +227,12 @@ class PyQt5Gui(GuiSkeleton):
 
     def showAssemble(self, state):
 
-        self._setWidget(Frames.WaitMessage(_('Processing picture...')))
+        self._setWidget(
+            Frames.WaitMessage(
+                (self._cfg.getInt('Gui', 'width'), self._cfg.getInt('Gui', 'height')),
+                ('Processing picture...')
+            )
+        )
 
     def showReview(self, state):
 

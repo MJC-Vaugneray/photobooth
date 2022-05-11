@@ -33,14 +33,29 @@ from ... import printer
 from . import Widgets
 from . import styles
 
+WIDTH_BOX_RATIO=68.67
+HEIGHT_BOX_RATIO=68.58
 
-class Welcome(QtWidgets.QFrame):
+class GenericFrame(QtWidgets.QFrame):
 
-    def __init__(self, start_action, set_date_action, settings_action,
-                 exit_action):
+    def __init__(self, size):
 
         super().__init__()
+        # Calculation for size
+        self._total_width, self._total_height = size
+        self._center_box_width = (WIDTH_BOX_RATIO * self._total_width) / 100
+        self._width_offset = (self._total_width - self._center_box_width) / 2
+        self._center_box_height=(HEIGHT_BOX_RATIO * self._total_height) / 100
+        self._height_offset=(self._total_height - self._center_box_height) / 2    
 
+class Welcome(GenericFrame):
+
+    def __init__(self, size, start_action, set_date_action, settings_action,
+                 exit_action):
+
+        super().__init__(size)
+ 
+        self.setObjectName('Welcome')
         self.initFrame(start_action, set_date_action, settings_action,
                        exit_action)
 
@@ -50,38 +65,35 @@ class Welcome(QtWidgets.QFrame):
         btnStart = QtWidgets.QPushButton(_('Start photobooth'))
         btnStart.clicked.connect(start_action)
 
-        btnSetDate = QtWidgets.QPushButton(_('Set date/time'))
-        btnSetDate.clicked.connect(set_date_action)
-
         btnSettings = QtWidgets.QPushButton(_('Settings'))
         btnSettings.clicked.connect(settings_action)
+
+        btnSetDate = QtWidgets.QPushButton(_('Set date/time'))
+        btnSetDate.clicked.connect(set_date_action)
 
         btnQuit = QtWidgets.QPushButton(_('Quit'))
         btnQuit.clicked.connect(exit_action)
 
-        btnLay = QtWidgets.QHBoxLayout()
-        btnLay.addWidget(btnStart)
-        btnLay.addWidget(btnSetDate)
-        btnLay.addWidget(btnSettings)
-        btnLay.addWidget(btnQuit)
+        btnLay = QtWidgets.QGridLayout()
+        btnLay.addWidget(btnStart, 0, 0)
+        btnLay.addWidget(btnSettings, 0, 1)
+        btnLay.addWidget(btnSetDate, 1, 0)
+        btnLay.addWidget(btnQuit, 1, 1)
 
-        title = QtWidgets.QLabel(_('photobooth'))
-
-        url = 'https://github.com/pichouk/photobooth'
-        link = QtWidgets.QLabel('<a href="{0}">{0}</a>'.format(url))
-
-        lay = QtWidgets.QVBoxLayout()
-        lay.addWidget(title)
-        lay.addLayout(btnLay)
-        lay.addWidget(link)
+        lay = QtWidgets.QGridLayout()
+        lay.setRowMinimumHeight(0, self._height_offset)
+        lay.setRowMinimumHeight(2, self._height_offset)
+        lay.setColumnMinimumWidth(0, self._width_offset)
+        lay.setColumnMinimumWidth(2, self._width_offset)
+        lay.setColumnMinimumWidth(1, self._center_box_width)
+        lay.addLayout(btnLay, 1, 1)
         self.setLayout(lay)
 
+class IdleMessage(GenericFrame):
 
-class IdleMessage(QtWidgets.QFrame):
+    def __init__(self, size, trigger_action):
 
-    def __init__(self, trigger_action):
-
-        super().__init__()
+        super().__init__(size)
         self.setObjectName('IdleMessage')
 
         self._message_label = _('Hit the')
@@ -95,17 +107,22 @@ class IdleMessage(QtWidgets.QFrame):
         btn = QtWidgets.QPushButton(self._message_button)
         btn.clicked.connect(trigger_action)
 
-        lay = QtWidgets.QVBoxLayout()
-        lay.addWidget(lbl)
-        lay.addWidget(btn)
+        lay = QtWidgets.QGridLayout()
+        lay.setRowMinimumHeight(0, self._height_offset)
+        lay.setRowMinimumHeight(3, self._height_offset)
+        lay.setColumnMinimumWidth(0, self._width_offset)
+        lay.setColumnMinimumWidth(2, self._width_offset)
+        lay.setColumnMinimumWidth(1, self._center_box_width)
+        lay.addWidget(lbl, 1, 1)
+        lay.addWidget(btn, 2, 1)
         self.setLayout(lay)
 
 
-class GreeterMessage(QtWidgets.QFrame):
+class GreeterMessage(GenericFrame):
 
-    def __init__(self, num_x, num_y, skip, countdown_action):
+    def __init__(self, size, num_x, num_y, skip, countdown_action):
 
-        super().__init__()
+        super().__init__(size)
         self.setObjectName('GreeterMessage')
 
         self._text_title = _('Get ready!')
@@ -120,7 +137,7 @@ class GreeterMessage(QtWidgets.QFrame):
         self.initFrame(countdown_action)
 
     def initFrame(self, countdown_action):
-
+     
         ttl = QtWidgets.QLabel(self._text_title)
         ttl.setObjectName('title')
         btn = QtWidgets.QPushButton(self._text_button)
@@ -129,11 +146,20 @@ class GreeterMessage(QtWidgets.QFrame):
         lbl = QtWidgets.QLabel(self._text_label)
         lbl.setObjectName('message')
 
-        lay = QtWidgets.QVBoxLayout()
-        lay.addWidget(ttl)
-        lay.addWidget(btn)
-        lay.addWidget(lbl)
-        self.setLayout(lay)
+        boxLay = QtWidgets.QVBoxLayout()
+        boxLay.addWidget(ttl)
+        boxLay.addWidget(btn)
+        boxLay.addWidget(lbl)
+
+        mainLay = QtWidgets.QGridLayout()
+        mainLay.setRowMinimumHeight(0, self._height_offset)
+        mainLay.setRowMinimumHeight(2, self._height_offset)
+        mainLay.setColumnMinimumWidth(0, self._width_offset)
+        mainLay.setColumnMinimumWidth(2, self._width_offset)
+        mainLay.setColumnMinimumWidth(1, self._center_box_width)
+        mainLay.addLayout(boxLay, 1, 1)
+
+        self.setLayout(mainLay)
 
 
 class CaptureMessage(QtWidgets.QFrame):
@@ -189,11 +215,11 @@ class PictureMessage(QtWidgets.QFrame):
         painter.end()
 
 
-class WaitMessage(QtWidgets.QFrame):
+class WaitMessage(GenericFrame):
 
-    def __init__(self, message):
+    def __init__(self, size, message):
 
-        super().__init__()
+        super().__init__(size)
         self.setObjectName('WaitMessage')
 
         self._text = message
@@ -204,8 +230,13 @@ class WaitMessage(QtWidgets.QFrame):
     def initFrame(self):
 
         lbl = QtWidgets.QLabel(self._text)
-        lay = QtWidgets.QVBoxLayout()
-        lay.addWidget(lbl)
+        lay = QtWidgets.QGridLayout()
+        lay.setRowMinimumHeight(0, self._height_offset)
+        lay.setRowMinimumHeight(2, self._height_offset)
+        lay.setColumnMinimumWidth(0, self._width_offset)
+        lay.setColumnMinimumWidth(2, self._width_offset)
+        lay.setColumnMinimumWidth(1, self._center_box_width)
+        lay.addWidget(lbl, 1, 1)
         self.setLayout(lay)
 
     def showEvent(self, event):

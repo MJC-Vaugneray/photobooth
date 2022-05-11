@@ -3,13 +3,12 @@
 QWidget {
     background-color: transparent;
     color: #eeeeee;
-    font-family: AmaticSC, sans-serif;
+    font-family: GarageGothic, sans-serif;
     font-size: 50px;
 }
 
 QMainWindow {
-    background: #ffffff qlineargradient(x1:0 y1:1, x2:1, y2:0, stop:0 rgba(255,165,150,255), stop:1 rgba(0,228,255,112));
-    color: #eeeeee;
+    background-image: url(photobooth/gui/Qt5Gui/images/zalex-background-1920x1080.png);
 }
 
 /* General controls */
@@ -27,13 +26,13 @@ QPushButton:pressed {
     background-color: #66eeeeee;
 }
 
-/* Idle Screen */
+/* Welcome page */
 
-QFrame#IdleMessage {
-    background-image: url(photobooth/gui/Qt5Gui/images/arrow-right-1280x720.png);
-    background-repeat: no-repeat;
-    padding: 80px 400px 120px 80px;
+
+QFrame#Welcome QPushButton {
+    padding: 50px;
 }
+/* Idle Screen */
 
 QFrame#IdleMessage QLabel {
     font-size: 160px;
@@ -45,11 +44,7 @@ QFrame#IdleMessage QPushButton {
     color: rgba(255, 27, 0, 200);
     font-size: 200px;
     text-align: center;
-}
-
-QFrame#IdleMessage QPushButton:pressed {
-    background-color: rgba(255, 27, 0, 200);
-    color: #eeeeee;
+    padding: 50px;
 }
 
 /* Greeter Screen */
@@ -59,7 +54,7 @@ QFrame#GreeterMessage {
 }
 
 QFrame#GreeterMessage QLabel#title {
-    font-size: 180px;
+    font-size: 150px;
     margin: 0;
     padding: 0;
     qproperty-alignment: AlignCenter;
@@ -67,39 +62,20 @@ QFrame#GreeterMessage QLabel#title {
 
 QFrame#GreeterMessage QPushButton#button {
     border: none;
-    font-size: 120px;
+    font-size: 100px;
     margin: 0;
-    min-height: 160px;
     padding: 0;
     text-align: center;
 }
 
 QFrame#GreeterMessage QLabel#message {
-    font-size: 120px;
+    font-size: 100px;
     margin: 0;
     padding: 0;
     qproperty-alignment: AlignCenter;
 }
 
-/* Countdown Screen */
-
-QFrame#CountdownMessage {
-    background-color: #eeeeee;
-    border-style: outset;
-    border-width: 2px;
-    border-radius: 30px;
-    border-color: #eeeeee;
-    margin: 20px;
-    padding: 30px;
-}
-
 /* Pose Screen */
-
-QFrame#PoseMessage {
-    background-image: url(photobooth/gui/Qt5Gui/images/camera-1024x600.png);
-    background-repeat: no-repeat;
-    padding: 380px 80px 80px 80px;
-}
 
 QFrame#PoseMessage QLabel {
     font-size: 120px;
@@ -109,11 +85,11 @@ QFrame#PoseMessage QLabel {
 /* Wait Screen */
 
 QFrame#WaitMessage {
-    padding: 350px 80px 80px 80px;
+    padding: 250px 80px 80px 80px;
 }
 
 QFrame#WaitMessage QLabel {
-    font-size: 110px;
+    font-size: 80px;
     qproperty-alignment: AlignCenter;
 }
 
@@ -121,43 +97,6 @@ QFrame#WaitMessage QLabel {
 
 QFrame#PictureMessage {
     margin: 30px;
-}
-
-/* Overlay message */
-
-QWidget#TransparentOverlay {
-    background-color: #aaeeeeee;
-    border-style: outset;
-    border-width: 2px;
-    border-radius: 30px;
-    border-color: #eeeeee;
-    color: #333333;
-    padding: 40px;
-}
-
-/* Postprocess message */
-
-QWidget#PostprocessMessage QLabel {
-    color: #333333;
-    font-size: 110px;
-    qproperty-alignment: AlignCenter;
-}
-
-QWidget#PostprocessMessage QPushButton {
-    color: #333333;
-    border-color: #333333;
-    background-color: #cceeeeee;
-    margin: 20px;
-}
-
-QWidget#PostprocessMessage QPushButton:pressed {
-    background-color: #66eeeeee;
-}
-
-QWidget#PostprocessMessage QPushButton:disabled {
-    background-color: #33eeeeee;
-    color: #11eeeeee;
-    border-color: #11eeeeee;
 }
 
 /* Customizing settings */
