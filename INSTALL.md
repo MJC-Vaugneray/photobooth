@@ -101,7 +101,7 @@ These are the steps to install the application.
 Run the following command to obtain the source code:
 
 ```bash
-git clone https://github.com/pichouk/photobooth.git
+git clone https://github.com/MJC-Vaugneray/photobooth.git
 ```
 
 This will create a folder `photobooth` with all necessary files.

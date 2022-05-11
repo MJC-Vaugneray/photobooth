@@ -1,8 +1,5 @@
 # Translations template for photobooth.
-# Copyright (C) 2018 ORGANIZATION
-# This file is distributed under the same license as the photobooth project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
-#
+
 #, fuzzy
 msgid ""
 msgstr ""

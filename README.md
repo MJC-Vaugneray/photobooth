@@ -50,6 +50,6 @@ Feel free to add new postprocessing components, a GUI based on some other librar
 
 ## Original project
 
-This project is a fork from [`reuterbal/photobooth`](https://github.com/reuterbal/photobooth) (thanks a lot to him), with some custom features.
+This project is a fork from [`reuterbal/photobooth`](https://github.com/reuterbal/photobooth), with some custom features. Thanks a lot to him for this work released under a copyleft license.
 
 Like the original project, the code is provided under [AGPL v3](LICENSE.txt).

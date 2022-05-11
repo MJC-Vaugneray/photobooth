@@ -1,22 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# Photobooth - a flexible photo booth software
-# Copyright (C) 2018  Balthasar Reuter <photobooth at re - web dot eu>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program. If not, see <http://www.gnu.org/licenses/>.
-
 """A setuptools based setup module for the photobooth.
 
 It uses the sampleprojects template (https://github.com/pypa/sampleproject)
@@ -119,11 +103,11 @@ setup(
     #
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
-    url='https://github.com/pichouk/photobooth',  # Optional
+    url='https://github.com/MJC-Vaugneray/photobooth',  # Optional
 
     # This should be your name or the name of the organization which owns the
     # project.
-    author='pichouk',  # Optional
+    author='MJC-Vaugneray',  # Optional
 
     # This should be a valid email address corresponding to the author listed
     # above.
@@ -245,20 +229,6 @@ setup(
         'console_scripts': [
             'photobooth=photobooth:main',
         ],
-    },
-
-    # List additional URLs that are relevant to your project as a dict.
-    #
-    # This field corresponds to the "Project-URL" metadata fields:
-    # https://packaging.python.org/specifications/core-metadata/#project-url-multiple-use
-    #
-    # Examples listed include a pattern for specifying where the package tracks
-    # issues, where the source is hosted, where to say thanks to the package
-    # maintainers, and where to support the project financially. The key is
-    # what's used to render the link text on PyPI.
-    project_urls={  # Optional
-        'Bug Reports': 'https://github.com/pichouk/photobooth/issues',
-        'Source': 'https://github.com/pichouk/photobooth/',
     },
 
     cmdclass={
