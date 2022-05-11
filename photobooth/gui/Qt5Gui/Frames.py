@@ -1109,7 +1109,8 @@ class Settings(QtWidgets.QFrame):
         qrcode_header_height = QtWidgets.QLineEdit(self._cfg.get('QRCode', 'qrcode_header_height'))
         self.add('QRCode', 'qrcode_header_height', qrcode_header_height)
 
-        barcode_enable = QtWidgets.QLineEdit(self._cfg.get('QRCode', 'barcode_enable'))
+        barcode_enable = QtWidgets.QCheckBox()
+        barcode_enable.setChecked(self._cfg.getBool('QRCode', 'barcode_enable'))
         self.add('QRCode', 'barcode_enable', barcode_enable)
 
         layout = QtWidgets.QFormLayout()
