@@ -23,7 +23,7 @@ QPushButton {
 }
 
 QPushButton:pressed {
-    background-color: #66eeeeee;
+    background-color: #25a79a;
 }
 
 /* Welcome page */
@@ -41,7 +41,7 @@ QFrame#IdleMessage QLabel {
 
 QFrame#IdleMessage QPushButton {
     border: none;
-    color: rgba(255, 27, 0, 200);
+    color: #25a79a;
     font-size: 200px;
     text-align: center;
     padding: 50px;
