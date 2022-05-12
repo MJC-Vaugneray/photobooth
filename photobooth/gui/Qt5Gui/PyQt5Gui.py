@@ -75,8 +75,13 @@ class PyQt5Gui(GuiSkeleton):
         self._gui = PyQt5MainWindow(self._cfg, self._handleKeypressEvent)
 
         # Load additional fonts
-        fonts = ['photobooth/gui/Qt5Gui/fonts/AmaticSC-Regular.ttf',
-                 'photobooth/gui/Qt5Gui/fonts/AmaticSC-Bold.ttf']
+        fonts = [
+            'photobooth/gui/Qt5Gui/fonts/AmaticSC-Regular.ttf',
+            'photobooth/gui/Qt5Gui/fonts/AmaticSC-Bold.ttf',
+            'photobooth/gui/Qt5Gui/fonts/GarageGothic-Black.otf',
+            'photobooth/gui/Qt5Gui/fonts/GarageGothic-Bold.otf',
+            'photobooth/gui/Qt5Gui/fonts/GarageGothicRegular.otf',
+        ]
         self._fonts = QtGui.QFontDatabase()
         for font in fonts:
             self._fonts.addApplicationFont(font)

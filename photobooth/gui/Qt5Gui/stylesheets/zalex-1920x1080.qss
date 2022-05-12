@@ -3,8 +3,8 @@
 QWidget {
     background-color: transparent;
     color: #eeeeee;
-    font-family: GarageGothic, sans-serif;
-    font-size: 50px;
+    font-family: GarageGothic-Bold, sans-serif;
+    font-size: 70px;
 }
 
 QMainWindow {
@@ -35,14 +35,14 @@ QFrame#Welcome QPushButton {
 /* Idle Screen */
 
 QFrame#IdleMessage QLabel {
-    font-size: 160px;
+    font-size: 180px;
     qproperty-alignment: AlignCenter;
 }
 
 QFrame#IdleMessage QPushButton {
     border: none;
     color: #25a79a;
-    font-size: 200px;
+    font-size: 220px;
     text-align: center;
     padding: 50px;
 }
@@ -54,7 +54,7 @@ QFrame#GreeterMessage {
 }
 
 QFrame#GreeterMessage QLabel#title {
-    font-size: 150px;
+    font-size: 170px;
     margin: 0;
     padding: 0;
     qproperty-alignment: AlignCenter;
@@ -62,14 +62,14 @@ QFrame#GreeterMessage QLabel#title {
 
 QFrame#GreeterMessage QPushButton#button {
     border: none;
-    font-size: 100px;
+    font-size: 120px;
     margin: 0;
     padding: 0;
     text-align: center;
 }
 
 QFrame#GreeterMessage QLabel#message {
-    font-size: 100px;
+    font-size: 120px;
     margin: 0;
     padding: 0;
     qproperty-alignment: AlignCenter;
@@ -78,7 +78,7 @@ QFrame#GreeterMessage QLabel#message {
 /* Pose Screen */
 
 QFrame#PoseMessage QLabel {
-    font-size: 120px;
+    font-size: 140px;
     qproperty-alignment: AlignCenter;
 }
 
@@ -89,7 +89,7 @@ QFrame#WaitMessage {
 }
 
 QFrame#WaitMessage QLabel {
-    font-size: 80px;
+    font-size: 100px;
     qproperty-alignment: AlignCenter;
 }
 
@@ -142,7 +142,7 @@ QGroupBox {
 
 QTabWidget QWidget {
     color: #333333;
-    font-size: 30px;
+    font-size: 50px;
 }
 
 QCheckBox::indicator {
@@ -163,7 +163,7 @@ QCheckBox::indicator::checked {
 QComboBox, QDateEdit, QLineEdit, QSpinBox, QTimeEdit {
     background-color: #eeeeee;
     color: #333333;
-    font-size: 30px;
+    font-size: 50px;
 }
 
 QComboBox QAbstractItemView {
