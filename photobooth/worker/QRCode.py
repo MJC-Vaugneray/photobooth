@@ -54,7 +54,8 @@ class QRCode:
 
         # Generate QRCode and Barcode
         self._generate_qrcode(generated_url)
-        self._generate_barcode(picture_tracker.picture_time)
+        if self._barcode_enable:
+            self._generate_barcode(picture_tracker.picture_time)
 
         # Generate result file
         self._generate_full_image()
@@ -95,7 +96,8 @@ class QRCode:
         if self._header_file is not None:
              imgs.append(self._header_img)
         imgs.append(self._qrcode_img)
-        imgs.append(Image.open(self._tmp_barcode_file).convert('RGB'))
+        if self._barcode_enable:
+            imgs.append(Image.open(self._tmp_barcode_file).convert('RGB'))
 
         widths, heights = zip(*(i.size for i in imgs))
         total_width = max(widths)
