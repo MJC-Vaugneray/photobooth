@@ -151,6 +151,7 @@ class LampProcess(mp.Process):
             except Exception as e:
                 logging.exception('LampProcess: Exception "{}"'.format(e))
                 self._comm.send(Workers.MASTER, ErrorEvent('LampWorker', str(e)))
+                return -1
 
         logging.debug('LampProcess: Exit')
 
@@ -175,8 +176,6 @@ def mainloop(comm, context):
                         return exit_code
         except Exception as e:
             logging.exception('Main: Exception "{}"'.format(e))
-            comm.send(Workers.MASTER, ErrorEvent('Gpio', str(e)))
-
 
 def run(argv, is_run):
 

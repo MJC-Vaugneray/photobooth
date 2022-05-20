@@ -38,7 +38,11 @@ class Relay(object):
 
     def __init__(self, idVendor=0x16c0, idProduct=0x05df):
         self.h = hid.device()
-        self.h.open(idVendor, idProduct)
+        try:
+            self.h.open(idVendor, idProduct)
+        except OSError as err:
+            raise err
+
         self.h.set_nonblocking(1)
         atexit.register(self.cleanup)
 
