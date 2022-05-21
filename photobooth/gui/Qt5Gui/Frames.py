@@ -1267,7 +1267,7 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('QRCode', 'qrcode_header', self.get('QRCode', 'qrcode_header').text())
         self._cfg.set('QRCode', 'qrcode_header_width', self.get('QRCode', 'qrcode_header_width').text())
         self._cfg.set('QRCode', 'qrcode_header_height', self.get('QRCode', 'qrcode_header_height').text())
-        self._cfg.set('QRCode', 'barcode_enable', self.get('QRCode', 'barcode_enable').text())
+        self._cfg.set('QRCode', 'barcode_enable', str(self.get('QRCode', 'barcode_enable').isChecked()))
 
         self._cfg.write()
         self._restartAction()
