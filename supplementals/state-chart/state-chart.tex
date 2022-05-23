@@ -7,14 +7,14 @@
   \tikzstyle{every state}=[fill=red,draw=none,text=white,minimum width=2cm]
 
   \node[initial,state]  (Welcome)                             {\texttt{Welcome}};
-  \node[state]          (Startup)   [right of=Welcome]        {\texttt{Startup}};
-  \node[state]          (Teardown)  [above of=Welcome]        {\texttt{Teardown}};
-  \node[state]          (Idle)      [right of=Startup]        {\texttt{Idle}};
-  \node[state]          (Greeter)   [right of=Idle]           {\texttt{Greeter}};
-  \node[state]          (Countdown) [right of=Greeter]        {\texttt{Countdown}};
-  \node[state]          (Capture)   [below right of=Countdown]{\texttt{Capture}};
-  \node[state]          (Assemble)  [below left of=Capture]   {\texttt{Assemble}};
-  \node[state]          (Review)    [left of=Assemble]        {\texttt{Review}};
+  \node[state]          (Startup)     [right of=Welcome]        {\texttt{Startup}};
+  \node[state]          (Teardown)    [above of=Welcome]        {\texttt{Teardown}};
+  \node[state]          (Idle)        [right of=Startup]        {\texttt{Idle}};
+  \node[state]          (Greeter)     [right of=Idle]           {\texttt{Greeter}};
+  \node[state]          (Countdown)   [right of=Greeter]        {\texttt{Countdown}};
+  \node[state]          (Capture)     [below right of=Countdown]{\texttt{Capture}};
+  \node[state]          (Assemble)    [below left of=Capture]   {\texttt{Assemble}};
+  \node[state]          (Review)      [left of=Assemble]        {\texttt{Review}};
   \node[state]          (Postprocess) [left of=Review]        {\texttt{Postprocess}};
 
   \node[state]          (Error)     [above of=Idle]           {\texttt{Error}};
@@ -32,9 +32,11 @@
         (Capture)   edge [bend right] node [rotate=-45,anchor=south] {\texttt{Camera('countdown')}} (Countdown)
         (Capture)   edge              node [rotate=45,anchor=north] {\texttt{Camera('assemble')}} (Assemble)
         (Assemble)  edge              node {\texttt{Camera('review')}} (Review)
-        (Review)    edge              node {\texttt{Gui('postprocess')}} (Postprocess)
-        (Postprocess) edge            node [rotate=90,anchor=south] {\texttt{Gui('idle')}} (Idle)
-        (Postprocess) edge [bend left] node [rotate=90,anchor=south] {\texttt{Gpio('idle')}} (Idle)
+        (Review)    edge              node {\texttt{Gui('idle')}} (Postprocess)
+        (Review)    edge [bend right] node [anchor=south] {\texttt{Gpio('idle')}} (Postprocess)
+        (Review)    edge              node [rotate=-55,anchor=south] {\texttt{Worker('idle') + Gui('idle')}} (Idle)
+        (Review)    edge [bend right] node [anchor=west] {\texttt{Worker('idle') + Gpio('idle')}} (Idle)
+        (Postprocess) edge            node [rotate=90,anchor=south] {\texttt{Worker('idle')}} (Idle)
         (Any)       edge              node {\texttt{Error(msg)}} (Error)
         (Error)     edge              node [rotate=-90,anchor=south] {\texttt{Gui('abort')}} (Idle)
         (Error)     edge [bend left]  node {\texttt{Gui('retry')}} (Any)

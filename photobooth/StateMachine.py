@@ -424,6 +424,8 @@ class ReviewState(State):
 
         super().__init__()
         self._picture = picture
+        self._ui_ready = False
+        self._postprocess_done = False
 
     @property
     def picture(self):
@@ -432,11 +434,24 @@ class ReviewState(State):
 
     def handleEvent(self, event, context):
 
-        if isinstance(event, GuiEvent) and event.name == 'postprocess':
-            context.state = PostprocessState()
+        if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and event.name == 'idle'):
+            # When UI is ready
+            self._ui_ready = True
+        elif (isinstance(event, WorkerEvent) and event.name == 'idle'):
+            # Post process tasks done
+            self._postprocess_done = True
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))
 
+        # Go to Postprocess State if review is done but not postprocess tasks
+        if self._ui_ready and not self._postprocess_done:
+            context.state = PostprocessState()
+
+        # Wait for both GUI and postprocess tasks to be ready
+        if self._ui_ready and self._postprocess_done:
+            self._ui_ready = False
+            self._postprocess_done = False
+            context.state = IdleState()
 
 class PostprocessState(State):
 
@@ -446,8 +461,7 @@ class PostprocessState(State):
 
     def handleEvent(self, event, context):
 
-        if ((isinstance(event, GuiEvent) or isinstance(event, GpioEvent)) and
-           event.name == 'idle'):
+        if (isinstance(event, WorkerEvent) and event.name == 'idle'):
             context.state = IdleState()
         else:
             raise TypeError('Unknown Event type "{}"'.format(event))

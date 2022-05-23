@@ -347,40 +347,17 @@ class CountdownMessage(QtWidgets.QFrame):
 
 class PostprocessMessage(Widgets.TransparentOverlay):
 
-    def __init__(self, parent, tasks, worker, idle_handle,
-                 timeout=None, timeout_handle=None):
+    def __init__(self, parent):
 
-        if timeout_handle is None:
-            timeout_handle = idle_handle
+        super().__init__(parent)
+        self.initFrame()
 
-        super().__init__(parent, timeout, timeout_handle)
-        self.setObjectName('PostprocessMessage')
-        self.initFrame(tasks, idle_handle, worker)
-
-    def initFrame(self, tasks, idle_handle, worker):
-
-        def disableAndCall(button, handle):
-            button.setEnabled(False)
-            button.update()
-            worker.put(handle)
-
-        def createButton(task):
-            button = QtWidgets.QPushButton(task.label)
-            button.clicked.connect(lambda: disableAndCall(button, task.action))
-            return button
-
-        buttons = [createButton(task) for task in tasks]
-        buttons.append(QtWidgets.QPushButton(_('Start over')))
-        buttons[-1].clicked.connect(idle_handle)
-
-        button_lay = QtWidgets.QGridLayout()
-        for i, button in enumerate(buttons):
-            pos = divmod(i, 2)
-            button_lay.addWidget(button, *pos)
+    def initFrame(self):
+        wait_message = QtWidgets.QLabel(_('Saving pictures'))
+        wait_message.setObjectName('PostprocessWaitMessage')
 
         layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(QtWidgets.QLabel(_('Happy?')))
-        layout.addLayout(button_lay)
+        layout.addWidget(wait_message)
         self.setLayout(layout)
 
 
@@ -620,12 +597,6 @@ class Settings(QtWidgets.QFrame):
         displ_time.setValue(self._cfg.getInt('Photobooth', 'display_time'))
         self.add('Photobooth', 'display_time', displ_time)
 
-        postproc_time = QtWidgets.QSpinBox()
-        postproc_time.setRange(0, 1000)
-        postproc_time.setValue(self._cfg.getInt('Photobooth',
-                                                'postprocess_time'))
-        self.add('Photobooth', 'postprocess_time', postproc_time)
-
         err_msg = QtWidgets.QLineEdit(
             self._cfg.get('Photobooth', 'overwrite_error_message'))
         self.add('Photobooth', 'overwrite_error_message', err_msg)
@@ -635,7 +606,6 @@ class Settings(QtWidgets.QFrame):
         layout.addRow(_('Greeter time before countdown [s]:'), greet_time)
         layout.addRow(_('Countdown time [s]:'), count_time)
         layout.addRow(_('Picture display time [s]:'), displ_time)
-        layout.addRow(_('Postprocess timeout [s]:'), postproc_time)
         layout.addRow(_('Overwrite displayed error message:'), err_msg)
 
         widget = QtWidgets.QWidget()
@@ -1147,8 +1117,6 @@ class Settings(QtWidgets.QFrame):
                       str(self.get('Photobooth', 'countdown_time').text()))
         self._cfg.set('Photobooth', 'display_time',
                       str(self.get('Photobooth', 'display_time').text()))
-        self._cfg.set('Photobooth', 'postprocess_time',
-                      str(self.get('Photobooth', 'postprocess_time').text()))
         self._cfg.set('Photobooth', 'overwrite_error_message',
                       self.get('Photobooth', 'overwrite_error_message').text())
 

@@ -30,7 +30,6 @@ from ...StateMachine import GuiEvent, TeardownEvent
 from ...Threading import Workers
 
 from ..GuiSkeleton import GuiSkeleton
-from ..GuiPostprocessor import GuiPostprocessor
 
 from . import styles
 from . import Frames
@@ -51,7 +50,6 @@ class PyQt5Gui(GuiSkeleton):
         self._initWorker()
 
         self._picture = None
-        self._postprocess = GuiPostprocessor(self._cfg)
 
     def run(self):
 
@@ -247,18 +245,11 @@ class PyQt5Gui(GuiSkeleton):
         self._setWidget(Frames.PictureMessage(self._picture))
         QtCore.QTimer.singleShot(
             review_time,
-            lambda: self._comm.send(Workers.MASTER, GuiEvent('postprocess')))
-        self._postprocess.do(self._picture)
+            lambda: self._comm.send(Workers.MASTER, GuiEvent('idle'))
+        )
 
     def showPostprocess(self, state):
-
-        tasks = self._postprocess.get(self._picture)
-        postproc_t = self._cfg.getInt('Photobooth', 'postprocess_time')
-
-        Frames.PostprocessMessage(
-            self._gui.centralWidget(), tasks, self._worker,
-            lambda: self._comm.send(Workers.MASTER, GuiEvent('idle')),
-            postproc_t * 1000)
+        Frames.PostprocessMessage(self._gui.centralWidget())
 
     def _handleKeypressEvent(self, event):
 

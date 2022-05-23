@@ -45,8 +45,7 @@ See [installation instructions](INSTALL.md).
 
 Default settings are stored in [`defaults.cfg`](photobooth/defaults.cfg) and can either be changed in the graphical user interface or by creating a file `photobooth.cfg` in the top folder and overwriting your settings there.
 
-The software design is very modular.
-Feel free to add new postprocessing components, a GUI based on some other library, etc.
+If you want to modify a locale file, don't forget to re-build all `.mo` files using `python setup.py build`.
 
 ## Original project
 

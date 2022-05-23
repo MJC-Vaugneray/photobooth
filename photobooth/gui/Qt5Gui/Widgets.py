@@ -182,7 +182,7 @@ class RoundProgressBar(QtWidgets.QWidget):
 
 class TransparentOverlay(QtWidgets.QWidget):
 
-    def __init__(self, parent, timeout=None, timeout_handle=None):
+    def __init__(self, parent):
 
         super().__init__(parent)
         self.setObjectName('TransparentOverlay')
@@ -190,10 +190,6 @@ class TransparentOverlay(QtWidgets.QWidget):
         rect = parent.rect()
         rect.adjust(50, 50, -50, -50)
         self.setGeometry(rect)
-
-        if timeout is not None:
-            self._handle = timeout_handle
-            self._timer = self.startTimer(timeout)
 
         self.show()
 
@@ -205,8 +201,3 @@ class TransparentOverlay(QtWidgets.QWidget):
         self.style().drawPrimitive(QtWidgets.QStyle.PE_Widget, opt, painter,
                                    self)
         painter.end()
-
-    def timerEvent(self, event):
-
-        self.killTimer(self._timer)
-        self._handle()

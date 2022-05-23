@@ -62,9 +62,9 @@ msgstr ""
 msgid "Start over"
 msgstr ""
 
-#: photobooth/gui/Qt5Gui/Frames.py:351
-msgid "Happy?"
-msgstr ""
+#: photobooth/gui/Qt5Gui/Frames.py:358
+msgid "Saving pictures"
+msgstr "Saving pictures in progress..."
 
 #: photobooth/gui/Qt5Gui/Frames.py:383
 msgid "Date:"

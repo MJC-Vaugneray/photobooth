@@ -26,7 +26,7 @@ class PictureTracker:
             self._basename = os.path.join(self._basedir, prefix + "_")
 
         self.extension = '.jpg'
-        self.count_width = 5
+        self.shots_count = 4
 
         # Initialize tracker
         self._assembled_picture = None
@@ -88,3 +88,17 @@ class PictureTracker:
         shot_path = self.getShotPath(self._counter)
         self._shots.append(shot_path)
         return shot_path
+
+    def checkAllFilesExists(self):
+        """
+        Check if all files (shots and assembled picture) exists on local filesystem
+        """
+        # Check for all shots
+        for i in range(1, self.shots_count+1):
+            shot_path = self.getShotPath(i)
+            if not os.path.isfile(shot_path):
+                return False
+        # Check for the assembled picture
+        if not os.path.isfile(self.getPicturePath()):
+            return False
+        return True

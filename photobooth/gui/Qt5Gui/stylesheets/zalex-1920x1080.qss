@@ -93,6 +93,14 @@ QFrame#WaitMessage QLabel {
     qproperty-alignment: AlignCenter;
 }
 
+/* Postprocess Screen */
+
+#PostprocessWaitMessage {
+  font-size: 150px;
+  qproperty-alignment: AlignCenter;
+  color: #25a79a;
+}
+
 /* Picture Screen */
 
 QFrame#PictureMessage {

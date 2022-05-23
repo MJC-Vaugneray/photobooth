@@ -12,6 +12,8 @@ from .PictureSSH import PictureSSH
 from .PictureS3 import PictureS3
 from .QRCode import QRCode
 
+import time
+
 class Worker:
 
     def __init__(self, config, comm):
@@ -73,6 +75,10 @@ class Worker:
             self._pic_tracker.initializeNextPicture()
         elif isinstance(state, StateMachine.ReviewState):
             self.doPostprocessTasks(state.picture)
+            # Wait until all files are saved
+            while not self._pic_tracker.checkAllFilesExists():
+                time.sleep(0.5)
+            self._comm.send(Workers.MASTER, StateMachine.WorkerEvent('idle'))
         elif isinstance(state, StateMachine.CameraEvent):
             if state.name == 'capture':
                 filepath = self._pic_tracker.getNextShot()
@@ -88,7 +94,7 @@ class Worker:
 
         for task in self._postprocess_tasks:
             if isinstance(task, PictureSSH) or isinstance(task, PictureS3):
-                # For SSH and S3 task, send individual shots and assemble dpicture
+                # For SSH and S3 task, send individual shots and assembled picture
                 task.do([self._pic_tracker.getPicturePath()] + self._pic_tracker.shots)
             elif isinstance(task, QRCode):
                 task.do(picture, self._pic_tracker)

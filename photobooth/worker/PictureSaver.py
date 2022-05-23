@@ -6,7 +6,6 @@ import os
 
 from .WorkerTask import WorkerTask
 
-
 class PictureSaver(WorkerTask):
 
     def __init__(self, basedir):

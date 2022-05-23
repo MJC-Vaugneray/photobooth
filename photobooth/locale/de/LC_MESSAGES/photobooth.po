@@ -56,8 +56,8 @@ msgid "Start over"
 msgstr "Nochmal"
 
 #: photobooth/gui/Qt5Gui/Frames.py:351
-msgid "Happy?"
-msgstr "Zufrieden?"
+msgid "Saving pictures"
+msgstr "Backup-Fotos in Bearbeitung..."
 
 #: photobooth/gui/Qt5Gui/Frames.py:383
 msgid "Date:"
