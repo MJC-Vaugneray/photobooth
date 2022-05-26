@@ -9,7 +9,6 @@ from .PictureMailer import PictureMailer
 from .PictureSaver import PictureSaver
 from .PictureUploadWebdav import PictureUploadWebdav
 from .PictureSSH import PictureSSH
-from .PictureS3 import PictureS3
 from .QRCode import QRCode
 
 import time
@@ -21,7 +20,7 @@ class Worker:
         self._comm = comm
 
         # Track the picture
-        self._pic_tracker = PictureTracker(config.get('Storage', 'basedir'), config.get('Storage', 'prefix'))
+        self._pic_tracker = PictureTracker()
 
         self.initPostprocessTasks(config)
         self.initPictureTasks(config)
@@ -48,10 +47,6 @@ class Worker:
         # PictureSSH to upload pictures to an SSH server
         if config.getBool('SSH', 'enable'):
             self._postprocess_tasks.append(PictureSSH(config))
-
-        # PictureS3 to upload pictures to a S3 bucket
-        if config.getBool('S3', 'enable'):
-            self._postprocess_tasks.append(PictureS3(config))
 
     def initPictureTasks(self, config):
 
@@ -93,8 +88,8 @@ class Worker:
     def doPostprocessTasks(self, picture):
 
         for task in self._postprocess_tasks:
-            if isinstance(task, PictureSSH) or isinstance(task, PictureS3):
-                # For SSH and S3 task, send individual shots and assembled picture
+            if isinstance(task, PictureSSH):
+                # For SSH send individual shots and assembled picture
                 task.do([self._pic_tracker.getPicturePath()] + self._pic_tracker.shots)
             elif isinstance(task, QRCode):
                 task.do(picture, self._pic_tracker)

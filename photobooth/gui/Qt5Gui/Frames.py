@@ -481,13 +481,11 @@ class Settings(QtWidgets.QFrame):
         tabs.addTab(self.createPhotoboothSettings(), _('Photobooth'))
         tabs.addTab(self.createCameraSettings(), _('Camera'))
         tabs.addTab(self.createPictureSettings(), _('Picture'))
-        tabs.addTab(self.createStorageSettings(), _('Storage'))
         tabs.addTab(self.createGpioSettings(), _('GPIO'))
         tabs.addTab(self.createPrinterSettings(), _('Printer'))
         tabs.addTab(self.createMailerSettings(), _('Mailer'))
         tabs.addTab(self.createUploadSettings(), _('Upload'))
         tabs.addTab(self.createSSHSettings(), _('SSH'))
-        tabs.addTab(self.createS3Settings(), _('S3'))
         tabs.addTab(self.createRelaySettings(), _('Relay'))
         tabs.addTab(self.createQRCodeSettings(), _('QRCode'))
         return tabs
@@ -694,6 +692,10 @@ class Settings(QtWidgets.QFrame):
         bg = QtWidgets.QLineEdit(self._cfg.get('Picture', 'background'))
         self.add('Picture', 'background', bg)
 
+        keep_pictures = QtWidgets.QCheckBox()
+        keep_pictures.setChecked(self._cfg.getBool('Picture', 'keep_pictures'))
+        self.add('Picture', 'keep_pictures', keep_pictures)
+
         lay_num = QtWidgets.QHBoxLayout()
         lay_num.addWidget(num_x)
         lay_num.addWidget(QtWidgets.QLabel('x'))
@@ -733,40 +735,6 @@ class Settings(QtWidgets.QFrame):
         layout.addRow(_('Min. distance border to shots [px]:'), lay_outer_dist)
         layout.addRow(_('Skip pictures:'), skip)
         layout.addRow(_('Background image:'), lay_file)
-
-        widget = QtWidgets.QWidget()
-        widget.setLayout(layout)
-        return widget
-
-    def createStorageSettings(self):
-
-        self.init('Storage')
-
-        basedir = QtWidgets.QLineEdit(self._cfg.get('Storage', 'basedir'))
-        prefix = QtWidgets.QLineEdit(self._cfg.get('Storage', 'prefix'))
-        self.add('Storage', 'basedir', basedir)
-        self.add('Storage', 'prefix', prefix)
-
-        keep_pictures = QtWidgets.QCheckBox()
-        keep_pictures.setChecked(self._cfg.getBool('Storage', 'keep_pictures'))
-        self.add('Storage', 'keep_pictures', keep_pictures)
-
-        def directory_dialog():
-            dialog = QtWidgets.QFileDialog.getExistingDirectory
-            basedir.setText(dialog(self, _('Select directory'),
-                                   os.path.expanduser('~'),
-                                   QtWidgets.QFileDialog.ShowDirsOnly))
-
-        dir_button = QtWidgets.QPushButton(_('Select directory'))
-        dir_button.clicked.connect(directory_dialog)
-
-        lay_dir = QtWidgets.QHBoxLayout()
-        lay_dir.addWidget(basedir)
-        lay_dir.addWidget(dir_button)
-
-        layout = QtWidgets.QFormLayout()
-        layout.addRow(_('Output directory (strftime possible):'), lay_dir)
-        layout.addRow(_('Prefix for file names:'), prefix)
         layout.addRow(_('Keep single shots:'), keep_pictures)
 
         widget = QtWidgets.QWidget()
@@ -1003,34 +971,6 @@ class Settings(QtWidgets.QFrame):
         widget.setLayout(layout)
         return widget
 
-    def createS3Settings(self):
-
-        self.init('S3')
-
-        enable = QtWidgets.QCheckBox()
-        enable.setChecked(self._cfg.getBool('S3', 'enable'))
-        self.add('S3', 'enable', enable)
-
-        aws_profile = QtWidgets.QLineEdit(self._cfg.get('S3', 'aws_profile'))
-        self.add('S3', 'aws_profile', aws_profile)
-        bucket_name = QtWidgets.QLineEdit(self._cfg.get('S3', 'bucket_name'))
-        self.add('S3', 'bucket_name', bucket_name)
-        prefix = QtWidgets.QLineEdit(self._cfg.get('S3', 'prefix'))
-        self.add('S3', 'prefix', prefix)
-        endpoint = QtWidgets.QLineEdit(self._cfg.get('S3', 'endpoint_url'))
-        self.add('S3', 'endpoint_url', endpoint)
-
-        layout = QtWidgets.QFormLayout()
-        layout.addRow(_('Enable S3:'), enable)
-        layout.addRow(_('AWS profile for S3 (must be configured on the computer):'), aws_profile)
-        layout.addRow(_('Name of the S3 bucket:'), bucket_name)
-        layout.addRow(_('Prefix for files inside bucket:'), prefix)
-        layout.addRow(_('Custom endpoint URL if not using AWS S3:'), endpoint)
-
-        widget = QtWidgets.QWidget()
-        widget.setLayout(layout)
-        return widget
-
     def createRelaySettings(self):
 
         self.init('Relay')
@@ -1143,13 +1083,8 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('Picture', 'skip', self.get('Picture', 'skip').text())
         self._cfg.set('Picture', 'background',
                       self.get('Picture', 'background').text())
-
-        self._cfg.set('Storage', 'basedir',
-                      self.get('Storage', 'basedir').text())
-        self._cfg.set('Storage', 'prefix',
-                      self.get('Storage', 'prefix').text())
-        self._cfg.set('Storage', 'keep_pictures',
-                      str(self.get('Storage', 'keep_pictures').isChecked()))
+        self._cfg.set('Picture', 'keep_pictures',
+                      str(self.get('Picture', 'keep_pictures').isChecked()))
 
         self._cfg.set('Gpio', 'enable',
                       str(self.get('Gpio', 'enable').isChecked()))
@@ -1217,12 +1152,6 @@ class Settings(QtWidgets.QFrame):
         self._cfg.set('SSH', 'ssh_server_user',
                       self.get('SSH', 'ssh_server_user').text())
         self._cfg.set('SSH', 'ssh_server_password', self.get('SSH', 'ssh_server_password').text())
-
-        self._cfg.set('S3', 'enable', str(self.get('S3', 'enable').isChecked()))
-        self._cfg.set('S3', 'aws_profile', self.get('S3', 'aws_profile').text())
-        self._cfg.set('S3', 'bucket_name', self.get('S3', 'bucket_name').text())
-        self._cfg.set('S3', 'prefix', self.get('S3', 'prefix').text())
-        self._cfg.set('S3', 'endpoint_url', self.get('S3', 'endpoint_url').text())
 
         self._cfg.set('Relay', 'enable', str(self.get('Relay', 'enable').isChecked()))
         self._cfg.set('Relay', 'vendor_id', self.get('Relay', 'vendor_id').text())

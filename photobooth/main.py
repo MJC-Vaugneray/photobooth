@@ -213,7 +213,6 @@ def run(argv, is_run):
 
     return exit_code
 
-
 def main(argv):
 
     # Parse command line arguments

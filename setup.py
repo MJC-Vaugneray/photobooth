@@ -176,7 +176,6 @@ setup(
         'requests',
         'paramiko',
         'scp',
-        'boto3',
         'hidapi',
         'qrcode',
         'python-barcode'

@@ -3,7 +3,7 @@
 
 from datetime import datetime
 from time import localtime, strftime
-import os.path
+import os
 
 class PictureTracker:
     """
@@ -13,34 +13,34 @@ class PictureTracker:
     Also keeps count of taken and previously existing pictures.
     """
 
-    def __init__(self, basedir, prefix):
+    def __init__(self):
         """
         Initialize filenames to the given basename and search for existing files. Set the counter accordingly.
         """
-        # Set basename and extension
-        self._basedir = strftime(basedir, localtime())
-        self._prefix = prefix
-        if not prefix:
-            self._basename = os.path.join(self._basedir, "")
-        else:
-            self._basename = os.path.join(self._basedir, prefix + "_")
-
         self.extension = '.jpg'
         self.shots_count = 4
 
         # Initialize tracker
-        self._assembled_picture = None
-        self._shots = []
-        self._counter = 0
+        self.initializeNextPicture()
+        # TODO create date folder if not exists before any new image is created
 
     def initializeNextPicture(self):
         """
         Reinitialize names, lists and counters for the next picture
         """
+        # Set basename
+        self._basedir = strftime("%Y-%m-%d", localtime())
+        self._initializeFolder()
+        self._basename = os.path.join(self._basedir, "")
+
         self._picture_time = datetime.now().strftime("%y%m%d%H%M%S")
         self._assembled_picture = None
         self._shots = []
         self._counter = 0
+
+    def _initializeFolder(self):
+        if not os.path.isdir(self._basedir):
+            os.mkdir(self._basedir)
 
     @property
     def basedir(self):
