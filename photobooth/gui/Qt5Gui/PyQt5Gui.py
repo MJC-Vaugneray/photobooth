@@ -143,7 +143,7 @@ class PyQt5Gui(GuiSkeleton):
         reply = QtWidgets.QMessageBox.critical(
             self._gui, state.origin, message,
             QtWidgets.QMessageBox.Retry | QtWidgets.QMessageBox.Cancel,
-            QtWidgets.QMessageBox.Cancel)
+            QtWidgets.QMessageBox.Retry)
 
         if reply == QtWidgets.QMessageBox.Retry:
             self._comm.send(Workers.MASTER, GuiEvent('retry'))
