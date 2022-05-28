@@ -5,7 +5,7 @@ photobooth.cfg
 .venv
 photobooth.egg-info
 *.log
-*.log.20??-??-??
+*.log.*
 print_*.pdf
 20??-??-??
 build

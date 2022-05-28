@@ -232,8 +232,7 @@ def main(argv):
     ch.setFormatter(formatter)
 
     # create file handler and set format
-    fh = logging.handlers.TimedRotatingFileHandler('photobooth.log', when='d',
-                                                   interval=1, backupCount=10)
+    fh = logging.handlers.RotatingFileHandler('photobooth.log', mode='a', maxBytes=1000000000, backupCount=10)
     fh.setFormatter(formatter)
 
     # Apply config
