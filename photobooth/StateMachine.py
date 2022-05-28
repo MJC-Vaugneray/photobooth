@@ -3,6 +3,7 @@
 
 import logging
 
+from .Threading import Workers
 
 class Context:
 
@@ -307,6 +308,8 @@ class WelcomeState(State):
         if isinstance(event, GuiEvent):
             if event.name == 'start':
                 context.state = StartupState()
+            elif event.name == 'trigger':
+                context._comm.send(Workers.MASTER, TeardownEvent(TeardownEvent.RESTART))
             elif event.name == 'exit':
                 context.state = TeardownState(TeardownEvent.EXIT)
         else:

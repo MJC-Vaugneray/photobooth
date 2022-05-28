@@ -152,7 +152,7 @@ class PyQt5Gui(GuiSkeleton):
 
     def showWelcome(self, state):
 
-        self._disableTrigger()
+        self._enableTrigger()
         self._disableEscape()
         self._setWidget(
             Frames.Welcome(

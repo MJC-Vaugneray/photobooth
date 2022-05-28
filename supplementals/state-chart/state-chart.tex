@@ -21,6 +21,7 @@
   \node[circle,draw,red,text=black] (Any) [left of=Error]    {Any state};
 
   \path (Welcome)   edge              node {\texttt{Gui('start')}} (Startup)
+        (Welcome)   edge [loop below] node {\texttt{Gui('trigger')}} (Welcome)
         (Welcome)   edge              node [rotate=90,anchor=south] {\texttt{Gui('exit')}}  (Teardown)
         (Startup)   edge              node {\texttt{Camera('ready')}} (Idle)
         (Idle)      edge              node {\texttt{Gui('trigger')}} (Greeter)
