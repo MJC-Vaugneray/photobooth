@@ -230,13 +230,8 @@ class WaitMessage(GenericFrame):
     def initFrame(self):
 
         lbl = QtWidgets.QLabel(self._text)
-        lay = QtWidgets.QGridLayout()
-        lay.setRowMinimumHeight(0, self._height_offset)
-        lay.setRowMinimumHeight(2, self._height_offset)
-        lay.setColumnMinimumWidth(0, self._width_offset)
-        lay.setColumnMinimumWidth(2, self._width_offset)
-        lay.setColumnMinimumWidth(1, self._center_box_width)
-        lay.addWidget(lbl, 1, 1)
+        lay = QtWidgets.QVBoxLayout()
+        lay.addWidget(lbl)
         self.setLayout(lay)
 
     def showEvent(self, event):
