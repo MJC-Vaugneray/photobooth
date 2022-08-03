@@ -233,7 +233,7 @@ class PyQt5Gui(GuiSkeleton):
         self._setWidget(
             Frames.WaitMessage(
                 (self._cfg.getInt('Gui', 'width'), self._cfg.getInt('Gui', 'height')),
-                ('Processing picture...')
+                _('Processing picture...')
             )
         )
 
