@@ -9,6 +9,7 @@ from io import BytesIO
 from .PictureDimensions import PictureDimensions
 from .. import StateMachine
 from ..Threading import Workers
+from .CameraGphoto2 import CameraGphoto2
 
 # Available camera modules as tuples of (config name, module name, class name)
 modules = (
@@ -83,16 +84,23 @@ class Camera:
 
         if isinstance(state, StateMachine.StartupState):
             self.startup()
-        elif isinstance(state, StateMachine.GreeterState):
-            self.prepareCapture()
-        elif isinstance(state, StateMachine.CountdownState):
-            self.capturePreview()
-        elif isinstance(state, StateMachine.CaptureState):
-            self.capturePicture(state)
-        elif isinstance(state, StateMachine.AssembleState):
-            self.assemblePicture()
-        elif isinstance(state, StateMachine.TeardownState):
-            self.teardown(state)
+        else:
+            if isinstance(self._cap, CameraGphoto2):
+                if isinstance(state, StateMachine.IdleState):
+                    self._cap.startIdle()
+                else:
+                    self._cap.stopIdle()
+
+            if isinstance(state, StateMachine.GreeterState):
+                self.prepareCapture()
+            elif isinstance(state, StateMachine.CountdownState):
+                self.capturePreview()
+            elif isinstance(state, StateMachine.CaptureState):
+                self.capturePicture(state)
+            elif isinstance(state, StateMachine.AssembleState):
+                self.assemblePicture()
+            elif isinstance(state, StateMachine.TeardownState):
+                self.teardown(state)
 
     def setActive(self):
 
@@ -102,6 +110,10 @@ class Camera:
 
         if self._cap.hasIdle:
             self._cap.setIdle()
+
+    def switchCameraToIdle(self):
+        self.setIdle()
+        self._cap.switchToIdle()
 
     def prepareCapture(self):
 

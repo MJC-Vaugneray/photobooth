@@ -3,6 +3,7 @@
 
 import io
 import logging
+import time, threading
 
 from PIL import Image
 
@@ -127,3 +128,32 @@ class CameraGphoto2(CameraInterface):
         file_data = camera_file.get_data_and_size()
         self._cap.file_delete(file_path.folder, file_path.name)
         return Image.open(io.BytesIO(file_data))
+
+    def keepAlive(self):
+
+        file_path = self._cap.capture(gp.GP_CAPTURE_IMAGE)
+        self._cap.file_delete(file_path.folder, file_path.name)
+
+    def startIdle(self):
+        self.keepAliveAction = setInterval(60*5, self.keepAlive)
+
+    def stopIdle(self):
+        if self.keepAliveAction is not None:
+            self.keepAliveAction.cancel()
+
+class setInterval :
+    def __init__(self,interval,action):
+        self.interval=interval
+        self.action=action
+        self.stopEvent=threading.Event()
+        thread=threading.Thread(target=self.__setInterval)
+        thread.start()
+
+    def __setInterval(self):
+        nextTime=time.time()+self.interval
+        while not self.stopEvent.wait(nextTime-time.time()) :
+            nextTime+=self.interval
+            self.action()
+
+    def cancel(self):
+        self.stopEvent.set()
