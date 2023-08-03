@@ -25,6 +25,7 @@ class CameraGphoto2(CameraInterface):
 
         self._setupLogging()
         self._setupCamera()
+        self.keepAliveAction = None
 
     def cleanup(self):
 
