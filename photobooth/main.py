@@ -150,8 +150,8 @@ class LampProcess(mp.Process):
                     break
             except Exception as e:
                 logging.exception('LampProcess: Exception "{}"'.format(e))
-                self._comm.send(Workers.MASTER, ErrorEvent('LampWorker', str(e)))
-                return -1
+                # Do not fail on Lamp errors
+                break
 
         logging.debug('LampProcess: Exit')
 

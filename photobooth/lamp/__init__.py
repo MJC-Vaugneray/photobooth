@@ -151,8 +151,9 @@ class LampWorker:
         try:
             self._relay = Relay(idVendor=int(config.get('Relay', 'vendor_id'), 16), idProduct=int(config.get('Relay', 'product_id'), 16))
         except Exception as err:
+            # Do not fail on error
             logging.exception('Lamp relay: Exception "{}"'.format(err))
-            self._comm.send(Workers.MASTER, ErrorEvent('LampWorker', 'unable to start the lamp relay'))
+            logging.error('unable to start the lamp relay')
 
         self._lampId = config.getInt('Relay', 'lamp_relay_id')
 
@@ -188,13 +189,19 @@ class LampWorker:
         """
         Turn on the lamp
         """
-        self._relay.set_state(self._lampId, on=True)
+        try:
+            self._relay.set_state(self._lampId, on=True)
+        except Exception as err:
+            logging.exception('Lamp relay: Exception "{}"'.format(err))
 
     def _turnOff(self):
         """
         Turn on the lamp
         """
-        self._relay.set_state(self._lampId, on=False)
+        try:
+            self._relay.set_state(self._lampId, on=False)
+        except Exception as err:
+            logging.exception('Lamp relay: Exception "{}"'.format(err))
 
 
     def teardown(self):
